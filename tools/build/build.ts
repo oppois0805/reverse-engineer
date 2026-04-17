@@ -44,6 +44,18 @@ interface PlatformConfig {
   // type 和 headersDir 會自動推導，不需要在 JSON 中定義
 }
 
+interface LegacyResourceEntry {
+  name: string;
+  from: string;
+}
+
+interface LegacyPlatformConfig {
+  agents?: LegacyResourceEntry[];
+  skills?: LegacyResourceEntry[];
+  workflow?: LegacyResourceEntry[];
+  prompts?: LegacyResourceEntry[];
+}
+
 // ============ Helper Functions ============
 
 /**
@@ -119,6 +131,83 @@ function transformContent(
   }
 
   return result;
+}
+
+function toUnixPath(p: string): string {
+  return p.replace(/\\/g, "/");
+}
+
+function stripMdExtension(p: string): string {
+  return p.replace(/\.md$/i, "");
+}
+
+function normalizeLegacyItems(
+  items: LegacyResourceEntry[] | undefined,
+  expectedPrefix: string,
+): ResourceItem[] {
+  if (!items || items.length === 0) {
+    return [];
+  }
+
+  const prefix = `${toUnixPath(expectedPrefix)}/`;
+
+  return items
+    .map((item) => {
+      const fromPath = toUnixPath(item.from);
+      if (!fromPath.startsWith(prefix)) {
+        return null;
+      }
+
+      let rel = fromPath.slice(prefix.length);
+      rel = stripMdExtension(rel);
+      rel = rel.replace(/\/SKILL$/i, "");
+
+      return {
+        from: rel,
+        to: rel,
+      };
+    })
+    .filter((item): item is ResourceItem => item !== null);
+}
+
+function normalizePlatformConfig(rawConfig: unknown): PlatformConfig {
+  if (
+    rawConfig &&
+    typeof rawConfig === "object" &&
+    Array.isArray((rawConfig as PlatformConfig).resources)
+  ) {
+    return rawConfig as PlatformConfig;
+  }
+
+  const legacy = (rawConfig || {}) as LegacyPlatformConfig;
+
+  const resources: ResourceConfig[] = [
+    {
+      srcDir: "src/agents",
+      outputDir: "agents",
+      extension: ".md",
+      list: normalizeLegacyItems(legacy.agents, "src/agents"),
+    },
+    {
+      srcDir: "src/skills",
+      outputDir: "skills",
+      list: normalizeLegacyItems(legacy.skills, "src/skills"),
+    },
+    {
+      srcDir: "src/workflow",
+      outputDir: "workflow",
+      extension: ".md",
+      list: normalizeLegacyItems(legacy.workflow, "src/workflow"),
+    },
+    {
+      srcDir: "src/prompts",
+      outputDir: "prompts",
+      extension: ".md",
+      list: normalizeLegacyItems(legacy.prompts, "src/prompts"),
+    },
+  ].filter((resource) => (resource.list?.length ?? 0) > 0);
+
+  return { resources };
 }
 
 // ============ Config Discovery ============
@@ -341,9 +430,8 @@ function processMcpConfigs(mcpFolders: string[]): void {
 // ============ Platform Building ============
 
 function buildPlatform(discovered: DiscoveredConfig): void {
-  const config: PlatformConfig = JSON.parse(
-    fs.readFileSync(discovered.configPath, "utf-8"),
-  );
+  const rawConfig = JSON.parse(fs.readFileSync(discovered.configPath, "utf-8"));
+  const config: PlatformConfig = normalizePlatformConfig(rawConfig);
 
   // 自動推導 headersDir
   const headersDir = getHeadersDir(discovered.platform);

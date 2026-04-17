@@ -1,0 +1,85 @@
+{
+    "name": "iwa-web-aidc-prompt-templates",
+    "version": "1.0.0",
+    "generatedAt": "2026-04-17",
+    "agents": [
+        {
+            "name": "architect",
+            "from": "src/agents/analysis/architect.md"
+        },
+        {
+            "name": "angular-feature-builder",
+            "from": "src/agents/builder/angular-feature-builder.md"
+        },
+        {
+            "name": "mvc-mqtt-integrator",
+            "from": "src/agents/integration/mvc-mqtt-integrator.md"
+        },
+        {
+            "name": "quality-gate",
+            "from": "src/agents/qa/quality-gate.md"
+        },
+        {
+            "name": "knowledge-curator",
+            "from": "src/agents/docs/knowledge-curator.md"
+        }
+    ],
+    "skills": [
+        {
+            "name": "workspace-knowledge",
+            "from": "src/skills/meta/workspace-knowledge/SKILL.md"
+        },
+        {
+            "name": "angular-feature-module",
+            "from": "src/skills/scaffolding/angular-feature-module/SKILL.md"
+        },
+        {
+            "name": "http-proxy-pattern",
+            "from": "src/skills/reference/http-proxy-pattern/SKILL.md"
+        },
+        {
+            "name": "i18n-statecode-pattern",
+            "from": "src/skills/reference/i18n-statecode-pattern/SKILL.md"
+        },
+        {
+            "name": "mvc-proxy-integration",
+            "from": "src/skills/integration/mvc-proxy-integration/SKILL.md"
+        },
+        {
+            "name": "mqtt-token-lifecycle",
+            "from": "src/skills/integration/mqtt-token-lifecycle/SKILL.md"
+        },
+        {
+            "name": "testing-jasmine-karma",
+            "from": "src/skills/quality/testing-jasmine-karma/SKILL.md"
+        },
+        {
+            "name": "devops-container-packaging",
+            "from": "src/skills/task/devops-container-packaging/SKILL.md"
+        }
+    ],
+    "workflow": [
+        {
+            "name": "common",
+            "from": "src/workflow/common.md"
+        },
+        {
+            "name": "aidc-feature-delivery",
+            "from": "src/workflow/aidc-feature-delivery.md"
+        }
+    ],
+    "prompts": [
+        {
+            "name": "feature-spec-to-implementation",
+            "from": "src/prompts/scaffolding/feature-spec-to-implementation.md"
+        },
+        {
+            "name": "mvc-proxy-scaffold",
+            "from": "src/prompts/integration/mvc-proxy-scaffold.md"
+        },
+        {
+            "name": "unit-test-generation",
+            "from": "src/prompts/testing/unit-test-generation.md"
+        }
+    ]
+}
