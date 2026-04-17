@@ -1,0 +1,39 @@
+{
+    "servers": {
+        "angular-cli": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@angular/cli",
+                "mcp"
+            ]
+        },
+        "primeng": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@primeng/mcp"
+            ]
+        },
+        "figma": {
+            "url": "https://mcp.figma.com/mcp",
+            "type": "http",
+            "headers": {
+                "Authorization": "Bearer {查看 Teams 帳密}"
+            }
+        },
+        "figma-local": {
+            "command": "npx",
+            "args": [
+                "mcp-remote",
+                "http://127.0.0.1:3845/sse"
+            ]
+        },
+        "atlassian": {
+            "type": "http",
+            "url": "https://mcp.atlassian.com/v1/mcp",
+            "gallery": "https://api.mcp.github.com",
+            "version": "1.0.0"
+        }
+    }
+}

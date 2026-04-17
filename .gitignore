@@ -1,0 +1,16 @@
+/node_modules
+
+# Visual Studio Code
+.vscode/*
+
+#playground
+playground
+
+#github
+.github
+
+#antigravity
+.agent
+
+#codex
+.codex
